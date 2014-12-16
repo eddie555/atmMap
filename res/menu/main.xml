@@ -1,0 +1,46 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    
+    
+     <item
+        android:id="@+id/action_settings"
+        android:showAsAction="never"
+          android:icon="@drawable/ic_launcher"
+        android:title="ATMS"/>
+     
+       <item android:id="@+id/rateApp"
+          android:icon="@drawable/star"
+          android:title="Rate"/>
+       
+        <item android:id="@+id/moreApps"
+          android:icon="@drawable/circ"
+          android:title="More Apps"/>
+        
+        <item android:id="@+id/playScrabattle"
+          android:icon="@drawable/scrabattle"
+          android:title="Play Scrabattle"/>
+       
+          <item android:id="@+id/terrain"
+          android:icon="@drawable/terrain"
+          android:title="Terrain"/>
+          
+          <item android:id="@+id/hybrid"
+          android:icon="@drawable/hybrid"
+          android:title="Hybrid"/>
+          
+          
+          <item android:id="@+id/road"
+          android:icon="@drawable/road"
+          android:title="Road"/>
+          
+          <item android:id="@+id/satellite"
+          android:icon="@drawable/satellite"
+          android:title="Satellite"/>
+       
+       
+       
+       <item android:id="@+id/exitApp"
+          android:icon="@drawable/x_close"
+          android:title="Exit"/>
+
+</menu>

@@ -1,0 +1,313 @@
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:ads="http://schemas.android.com/apk/lib/com.google.android.gms.ads"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapActivity"
+    android:background="@color/backRed" >
+
+     <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:gravity="center" >
+
+        
+
+
+ 
+           <LinearLayout
+         android:id="@+id/mapHolder"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:background="@color/backRed"
+         android:orientation="vertical" >
+    
+     <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+   </LinearLayout>
+   
+           
+                         
+ <ScrollView
+     android:id="@+id/scrollView2"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_marginTop="48dp"
+      >
+    <LinearLayout
+        android:id="@+id/butlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+       android:background="#88000000" >
+    </LinearLayout>
+</ScrollView>
+    </RelativeLayout>
+    
+    
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+       android:background="@color/backRedTransparent"
+        android:gravity="center" >
+
+       
+     <ImageButton
+        android:id="@+id/search_button"
+         android:background="#0000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/search_icon" />
+    
+     
+     <LinearLayout
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true">
+
+  >
+      <ImageButton
+        android:id="@+id/menu"
+         android:background="#0000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/menu" />
+
+    <ImageButton
+        android:id="@+id/gps_button"
+         android:background="#0000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/menu"
+        android:src="@drawable/gps_icon" />
+      
+</LinearLayout>
+     <EditText
+         android:id="@+id/searchTerm"
+         android:layout_width="wrap_content"
+         android:layout_height="40dp"
+         
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+         android:layout_alignBottom="@+id/search_button"
+         android:layout_alignParentLeft="true"
+         android:background="@+color/whiteTransparent"
+         android:ems="10" 
+         >
+
+     </EditText>
+     
+      <ImageButton
+         android:id="@+id/x_button"
+         android:background="#0000"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:src="@drawable/x_close" />
+      
+    </RelativeLayout>
+
+     <LinearLayout
+         android:id="@+id/hrline1"
+         android:layout_width="match_parent"
+         android:layout_height="2dp"
+         android:layout_alignTop="@+id/header"
+         
+         android:background="@color/backRed"
+         android:orientation="vertical" >
+      </LinearLayout>
+     <LinearLayout
+         android:id="@+id/hrline2"
+         android:layout_width="match_parent"
+         android:layout_height="2dp"
+         android:layout_alignBottom="@+id/header"
+         
+         android:background="@color/backRed"
+         android:orientation="vertical" >
+      </LinearLayout>
+    <!-- Footer aligned to bottom -->
+
+
+
+ <RelativeLayout 
+       android:id="@+id/footer"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:weightSum="10"
+       >  
+
+  
+        
+    <LinearLayout
+	 android:id="@+id/adArea"
+         android:layout_width="fill_parent"
+         android:layout_weight="8"
+        android:layout_height="wrap_content"
+        android:background="@color/backRedTransparent"
+        
+        android:orientation="vertical"
+        >
+
+    
+     
+          <LinearLayout
+         android:id="@+id/hrline3"
+         android:layout_width="match_parent"
+         android:layout_height="2dp"
+         android:layout_alignTop="@+id/adblock"
+         
+         android:background="@color/backRed"
+         android:orientation="vertical" >
+          
+          
+      </LinearLayout>
+      
+          
+          
+        <LinearLayout
+        android:id="@+id/adblock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"         
+    >
+    </LinearLayout>
+              <LinearLayout
+         android:id="@+id/hrline4"
+         android:layout_height="2dp"
+         android:layout_alignBottom="@+id/adblock"
+         android:layout_width="match_parent"
+         android:background="@color/backRed"
+         android:orientation="vertical" >
+      </LinearLayout>
+      
+   </LinearLayout>
+       
+  
+     
+    
+    
+ <LinearLayout
+        android:id="@+id/footerHidden"
+
+         android:layout_width="fill_parent"
+         android:layout_weight="2"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+         android:orientation="vertical"
+        >
+   </LinearLayout>
+   
+ 
+</RelativeLayout>
+
+ <RelativeLayout
+      android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+        android:id="@+id/lay1"
+        
+        >
+  <RelativeLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" 
+    
+        android:background="@color/backRedTransparent"
+        android:layout_centerInParent="true"
+        android:id="@+id/layzt">
+    
+    <ImageButton
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="5dp" 
+        android:background="@null"
+         android:layout_marginTop="5dp"
+        />
+    
+     
+    <TextView
+        android:id="@+id/text" 
+        android:layout_toRightOf="@id/image"
+        android:layout_width="200dp"
+        android:layout_height="90dp"
+        android:textColor="#FFF" 
+        
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp" />
+    
+     <ImageButton
+         android:id="@+id/x_close_id"
+    	android:layout_alignTop="@id/text"
+        android:layout_toRightOf="@id/text"
+         android:layout_width="50dp"
+         android:layout_height="50dp"
+         android:background="@null"
+         android:layout_marginTop="5dp"
+         android:layout_marginRight="5dp" />
+
+    </RelativeLayout>  
+       
+   </RelativeLayout>  
+   
+ 
+ <RelativeLayout
+      android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+        android:id="@+id/lay2"
+        
+        >
+  <RelativeLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" 
+    
+        android:background="@color/backRedTransparent"
+        android:layout_centerInParent="true"
+        android:id="@+id/layzt2">
+    
+ 
+    
+     <Button
+         android:id="@+id/enable_location_services_but"
+         android:layout_width="150dp"
+         android:layout_height="50dp"
+         android:layout_marginRight="5dp"
+         
+         android:text="Enable Location Services" />
+     
+      <ImageButton
+         android:id="@+id/x_location_services_button"
+    	android:layout_alignTop="@id/enable_location_services_but"
+        android:layout_toRightOf="@id/enable_location_services_but"
+         android:layout_width="50dp"
+         android:layout_height="50dp"
+         android:layout_marginRight="5dp" 
+         android:src="@drawable/x_close"
+         />
+
+    </RelativeLayout>  
+       
+   </RelativeLayout> 
+        
+</RelativeLayout>

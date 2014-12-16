@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+     xmlns:ads="http://schemas.android.com/apk/lib/com.google.android.gms.ads"
+    package="com.atms.atmmap"
+    android:versionCode="19"
+    android:versionName="11" 
+    android:installLocation="auto"
+    android:label="@string/app_name">
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+    
+
+    <permission
+        android:name="com.atms.atmmap.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+  <supports-screens android:resizeable="true"
+                  android:smallScreens="true"
+                  android:normalScreens="true"
+                  android:largeScreens="true"
+                  android:xlargeScreens="true"
+                  android:anyDensity="true"
+                  android:requiresSmallestWidthDp="1"
+                  android:largestWidthLimitDp="9999999"/>
+
+
+<supports-screens android:largeScreens="true" 
+    android:normalScreens="true" 
+    android:smallScreens="true" android:anyDensity="true"></supports-screens>
+
+                  
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAX6_uSbQVIIEpSGMn4S6TIu-yMhO9V0-4" />
+        
+        
+          
+           
+        <activity
+            android:name="com.atms.atmmap.MainActivity"
+            android:label="@string/app_name"
+  >
+        
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.atms.atmmap.BaseActivity"
+            android:label="@string/title_activity_base" >
+        </activity>
+        <activity
+            android:name="com.atms.atmmap.SearchActivity"
+            android:label="@string/title_activity_search" >
+        </activity>
+        <activity
+            android:name="com.atms.atmmap.LoadingActivity"
+            android:label="ATMs" >
+        </activity>
+       
+        <activity
+            android:name="com.atms.atmmap.LoadActivity"
+            android:label="ATMs" 
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+       
+        <activity
+            android:name="com.atms.atmmap.MarkerPopUpActivity"
+            android:label="@string/title_activity_marker_pop_up" >
+        </activity>
+    <activity android:name="com.google.android.gms.ads.AdActivity"
+              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        
+    </application>
+
+</manifest>
