@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,28 +27,48 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DatabaseWorker extends SQLiteOpenHelper {
 	Context mContext;
+	MainActivity parent;
 	SQLiteDatabase db;
-	public DatabaseWorker(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	public Boolean DBOK=true;
+	public DatabaseWorker(Context context, MainActivity parent) {
 		
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+this.parent=parent;
 		this.mContext = context;
 		
+
+		parent.setMessage("Checking Database...");
 		if (!checkDataBase()) {
+
+		   parent.setMessage("Updating Database..");
 		   updateDB();
 
 		} else {
 
+			parent.setMessage("Database OK!");
 			System.out.println("NOT DOWNLOADING DATABASE");
 		}
-		
+
+		parent.setMessage("Checking For Update...");
 		checkForUpdate();
+		
 	}
 
 	private void updateDB(){
-		System.out.println("DOWNLOADING DATABASE");
+		if(checkDataBase())
+		updateDB(false);
+		else
+		updateDB(true);
+	}
+	private void updateDB(Boolean important){
+			
 		dc = new DownloaderClass();
+		
+		parent.setMessage("Downloading Database...");
 		dc.downloadDatabase(mContext);
-		copyServerDatabase();
+
+		parent.setMessage("Saving Database...");
+		copyServerDatabase(important);
 	}
 	private DownloaderClass dc;
 	private static final int DATABASE_VERSION = 2;
@@ -73,7 +94,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		db = null;
 		try {
 			db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
-					SQLiteDatabase.OPEN_READONLY);
+					SQLiteDatabase.OPEN_READWRITE);
 			db.close();
 		} catch (SQLiteException e) {
 			System.out.println("NO DATABAcopyAssetsFiles()SE");
@@ -105,7 +126,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 			
 			try{
 			db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
-					SQLiteDatabase.OPEN_READONLY);
+					SQLiteDatabase.OPEN_READWRITE);
 			String selectQuery = "SELECT version FROM version WHERE id = 0";
 			Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -123,9 +144,11 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 				
 			}
 			if(localVersion == null){
+				parent.setMessage("Updating Database...");
 				updateDB();
 			}else
 				if(Integer.parseInt(localVersion) < Integer.parseInt(liveVersion)){
+					parent.setMessage("Updating Database...");
 				updateDB();
 				}
 			
@@ -147,14 +170,13 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 	 * folder, from where it can be accessed and handled. This is done by
 	 * transfering bytestream.
 	 * */
-	private void copyServerDatabase() {
+	private void copyServerDatabase(Boolean important) {
 		// by calling this line an empty database will be created into the
 		// default system path
 		// of this app - we will then overwrite this with the database from the
 		// server
 		SQLiteDatabase db = getReadableDatabase();
 		db.close();
-
 		OutputStream os = null;
 		InputStream is = null;
 		try {
@@ -164,9 +186,9 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 
 			copyFile(os, is);
 		} catch (Exception e) {
-			Log.e("DBDOWNLOADERROR",
-					"Server Database was not found - did it download correctly?",
-					e);
+			if(important){
+			DBOK=false;
+			}
 		} finally {
 			try {
 				// Close the streams
@@ -195,7 +217,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		ArrayList<ATM> retList = new ArrayList<ATM>();
 		//db.close();
 		db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
-				SQLiteDatabase.OPEN_READONLY);
+				SQLiteDatabase.OPEN_READWRITE);
 		String limit = "65";
 		String selectQuery = "SELECT address,lng,lat,owner FROM atms_accurate ORDER BY ABS("
 				+ ll.latitude
@@ -226,7 +248,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		ArrayList<Town> retList = new ArrayList<Town>();
 		//db.close();
 		db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
-				SQLiteDatabase.OPEN_READONLY);
+				SQLiteDatabase.OPEN_READWRITE);
 		String limit = "120";
 		String selectQuery = "SELECT name,lng,lat,city FROM towns_accurate where name like '"
 				+ charSequence + "%' ORDER BY city DESC LIMIT "+limit;
@@ -251,7 +273,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		ArrayList<Town> retList = new ArrayList<Town>();
 		//db.close();
 		db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
-				SQLiteDatabase.OPEN_READONLY);
+				SQLiteDatabase.OPEN_READWRITE);
 		String limit = "1";
 		String selectQuery = "SELECT name,lng,lat,city FROM towns_accurate ORDER BY ABS("
 				+ ll.latitude

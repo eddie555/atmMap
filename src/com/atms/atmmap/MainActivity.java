@@ -65,6 +65,8 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 	public DatabaseWorker dw;
 
 	public RelativeLayout popup;
+	public RelativeLayout messageScreen;
+	public TextView messages;
 	public RelativeLayout location_popup;
 	int currentMarkerIndex = -1;
 	public LatLng currentGPS;
@@ -195,11 +197,22 @@ public LatLng compareLatLng;
 	
 	}
 	
+	public void setMessage(String message){
+		messageScreen.setVisibility(View.VISIBLE);
+		messages.setText(message);
+	}
+
+	public void hideMessages(){
+		messageScreen.setVisibility(View.GONE);
+	}
+	
+	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
@@ -228,11 +241,19 @@ public LatLng compareLatLng;
 
 		setContentView(R.layout.activity_main);
 
-		dw = new DatabaseWorker(getBaseContext());
 
+
+		popup = (RelativeLayout) findViewById(R.id.lay1);
+		messageScreen = (RelativeLayout) findViewById(R.id.messages);
+		location_popup = (RelativeLayout) findViewById(R.id.lay2);
+		messages = (TextView) findViewById(R.id.messageText);
+		
+
+		dw = new DatabaseWorker(getBaseContext(), this);
 		
 		adBlock = (LinearLayout) findViewById(R.id.adblock);
-
+		
+		if(dw.DBOK){
 		DOIT();
 
 		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -309,7 +330,7 @@ public LatLng compareLatLng;
 
 		// map.setOnMarkerClickListener((OnMarkerClickListener) this);
 		displayMapOnScreen();
-
+		}
 		final EditText searchTxt = (EditText) findViewById(R.id.searchTerm);
 		final ImageButton xbut = (ImageButton) findViewById(R.id.x_button);
 		final ImageButton search_button = (ImageButton) findViewById(R.id.search_button);
@@ -318,8 +339,7 @@ public LatLng compareLatLng;
 		final LinearLayout hrline3 = (LinearLayout) findViewById(R.id.hrline3);
 		final LinearLayout hrline4 = (LinearLayout) findViewById(R.id.hrline4);
 		final RelativeLayout footerBlock = (RelativeLayout) findViewById(R.id.footer);
-		popup = (RelativeLayout) findViewById(R.id.lay1);
-		location_popup = (RelativeLayout) findViewById(R.id.lay2);
+		
 		// mainLayout.setBackgroundColor(Color.parseColor("#BBBF0000"));
 		final Button enable_location_services_button = (Button) findViewById(R.id.enable_location_services_but);
 		final ImageButton x_location_services_button = (ImageButton) findViewById(R.id.x_location_services_button);
@@ -332,6 +352,8 @@ public LatLng compareLatLng;
 		mainLayout.setVisibility(View.GONE);
 		location_popup.setVisibility(View.GONE);
 
+if(dw.DBOK){
+		
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		search_button.setOnClickListener(new View.OnClickListener() {
@@ -417,7 +439,8 @@ public LatLng compareLatLng;
 		    		System.out.println("DIFFERENCE: "+Math.abs(cop2.latitude - compareLatLng.latitude));
 		    		if(Math.abs(cop2.latitude - compareLatLng.latitude) > .01 || Math.abs(cop2.longitude - compareLatLng.longitude) > .01  )
 		    	    {MainActivity.this.compareLatLng = map.getCameraPosition().target; 
-		    		loadMarkers();}
+		    		loadMarkers();
+		    		System.gc();}
 		    	}
 		    	ignoreMapMovement=false;
 		    }
@@ -511,6 +534,25 @@ public LatLng compareLatLng;
 			}
 		});
 
+		hideMessages();
+}
+else{
+	setMessage("You must have a full internet connection to proceed");
+	Button retryDatabase = (Button) findViewById(R.id.retryDatabase);
+	retryDatabase.setTextColor(0xffffffff);
+	retryDatabase.setOnTouchListener(new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View arg0, MotionEvent arg1) {
+
+    		Intent intent = new Intent(getBaseContext(), LoadActivity.class);
+    		startActivity(intent);
+
+			return false;
+		}
+	});
+	
+}
 	}
 
 	public int lastTextChange = 0;
@@ -807,8 +849,10 @@ public LatLng compareLatLng;
 		ImageButton xbut = (ImageButton) findViewById(R.id.x_close_id);
 		xbut.setImageResource(R.drawable.x_close);
 
-		ImageButton directionsBut = (ImageButton) findViewById(R.id.directionsButton);
-		xbut.setImageResource(R.drawable.directions);
+		Button directionsBut = (Button) findViewById(R.id.directionsButton);
+		directionsBut.setTextColor(0xffffffff);
+
+		//directionsBut.setImageResource(R.drawable.directions);
 		//directionsBut.setHeight(40);
 		/*
 		 * Button saveBut = (Button)findViewById(R.id.saveButton);
@@ -846,7 +890,7 @@ public LatLng compareLatLng;
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
-				Uri.parse("http://maps.google.com/maps?saddr="+MyLoc.latitude+","+MyLoc.longitude+"(My+Location)&daddr="+currentGPS.latitude+","+currentGPS.longitude+"(ATM)"));
+				Uri.parse("http://maps.google.com/maps?saddr="+MyLoc.latitude+","+MyLoc.longitude+"&daddr="+currentGPS.latitude+","+currentGPS.longitude+""));
 				startActivity(intent);
 				return false;
 			}
@@ -910,6 +954,10 @@ public LatLng compareLatLng;
 
 	}
 
+	public void showQuickToast(String tmessage){
+		Toast.makeText(getBaseContext(),
+				tmessage, Toast.LENGTH_LONG).show();
+	}
 	public ArrayList<Town> getTowns(CharSequence charSequence) {
 
 		return dw.getTowns(charSequence);
@@ -939,7 +987,6 @@ public LatLng compareLatLng;
 
 	@Override
 	public void onPause() {
-		dw.db.close();
 		adView.pause();
 		super.onPause();
 	}
@@ -947,14 +994,12 @@ public LatLng compareLatLng;
 	@Override
 	public void onResume() {
 		super.onResume();
-		dw.db.close();
 		adView.resume();
 	}
 
 	@Override
 	public void onDestroy() {
 		adView.destroy();
-		dw.db.close();
 		super.onDestroy();
 	}
 

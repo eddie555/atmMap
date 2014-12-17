@@ -391,8 +391,9 @@ containing a value of this type.
     }
     public static final class color {
         public static final int backRed=0x7f080017;
-        public static final int backRedTransparent=0x7f080018;
-        public static final int black=0x7f08001b;
+        public static final int backRedMidTransparent=0x7f080018;
+        public static final int backRedTransparent=0x7f080019;
+        public static final int black=0x7f08001c;
         public static final int common_action_bar_splitter=0x7f080009;
         /**  Sign-in Button Colors 
          */
@@ -405,8 +406,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f080006;
         public static final int common_signin_btn_light_text_focused=0x7f080007;
         public static final int common_signin_btn_light_text_pressed=0x7f080005;
-        public static final int common_signin_btn_text_dark=0x7f08001c;
-        public static final int common_signin_btn_text_light=0x7f08001d;
+        public static final int common_signin_btn_text_dark=0x7f08001d;
+        public static final int common_signin_btn_text_light=0x7f08001e;
         public static final int wallet_bright_foreground_disabled_holo_light=0x7f08000f;
         /** 
          Wallet colors to support consistent Wallet fragment holo dark UI in client application
@@ -425,10 +426,10 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f080011;
         public static final int wallet_holo_blue_light=0x7f080015;
         public static final int wallet_link_text_light=0x7f080016;
-        public static final int wallet_primary_text_holo_light=0x7f08001e;
-        public static final int wallet_secondary_text_holo_dark=0x7f08001f;
-        public static final int white=0x7f080019;
-        public static final int whiteTransparent=0x7f08001a;
+        public static final int wallet_primary_text_holo_light=0x7f08001f;
+        public static final int wallet_secondary_text_holo_dark=0x7f080020;
+        public static final int white=0x7f08001a;
+        public static final int whiteTransparent=0x7f08001b;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -495,8 +496,8 @@ containing a value of this type.
         public static final int x_close=0x7f020033;
     }
     public static final class id {
-        public static final int action_settings=0x7f07003a;
-        public static final int activity_marker_pop_up_id=0x7f070036;
+        public static final int action_settings=0x7f07003e;
+        public static final int activity_marker_pop_up_id=0x7f07003a;
         public static final int adArea=0x7f070027;
         public static final int adblock=0x7f070029;
         public static final int adjust_height=0x7f070002;
@@ -511,7 +512,7 @@ containing a value of this type.
         public static final int directionsButton=0x7f070031;
         public static final int donate_with_google=0x7f070013;
         public static final int enable_location_services_but=0x7f070034;
-        public static final int exitApp=0x7f07003f;
+        public static final int exitApp=0x7f070043;
         public static final int footer=0x7f070026;
         public static final int footerHidden=0x7f07002b;
         public static final int gps_button=0x7f070021;
@@ -530,23 +531,27 @@ containing a value of this type.
         public static final int lay2=0x7f070032;
         public static final int layzt=0x7f07002d;
         public static final int layzt2=0x7f070033;
+        public static final int logoImage=0x7f070037;
         public static final int map=0x7f07001b;
         public static final int mapHolder=0x7f07001a;
         public static final int match_parent=0x7f07000e;
         public static final int menu=0x7f070020;
+        public static final int messageText=0x7f070038;
+        public static final int messages=0x7f070036;
         public static final int monochrome=0x7f070016;
-        public static final int moreApps=0x7f07003c;
+        public static final int moreApps=0x7f070040;
         public static final int none=0x7f070000;
         public static final int normal=0x7f070003;
-        public static final int playScrabattle=0x7f07003d;
+        public static final int playScrabattle=0x7f070041;
         public static final int production=0x7f070009;
-        public static final int rateApp=0x7f07003b;
-        public static final int road=0x7f07003e;
+        public static final int rateApp=0x7f07003f;
+        public static final int retryDatabase=0x7f070039;
+        public static final int road=0x7f070042;
         public static final int sandbox=0x7f07000a;
         public static final int satellite=0x7f070004;
-        public static final int saveButton=0x7f070037;
-        public static final int saveLoc=0x7f070038;
-        public static final int saveStreet=0x7f070039;
+        public static final int saveButton=0x7f07003b;
+        public static final int saveLoc=0x7f07003c;
+        public static final int saveStreet=0x7f07003d;
         public static final int scrollView2=0x7f07001c;
         public static final int searchTerm=0x7f070022;
         public static final int search_button=0x7f07001f;

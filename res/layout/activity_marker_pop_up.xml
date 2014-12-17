@@ -41,17 +41,16 @@
          android:layout_marginRight="5dp"
          android:src="@drawable/x_close" />
 
-      
-  
-     <ImageButton
+ <Button
+         android:color="#FFFFFF"
          android:id="@+id/directionsButton"
-         android:layout_width="40dp"
-         android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+         android:layout_width="fill_parent"
+         android:layout_height="46dp"
          android:padding="10dp"
-         android:text="Directions"
-         android:background="@null"
-         android:layout_marginTop="60dp"
-         android:src="@drawable/directions"/>
+         android:text="Launch Directions"
+         android:background="@color/backRedTransparent"  
+         android:layout_marginTop="80dp"/>
      
      </RelativeLayout>
      

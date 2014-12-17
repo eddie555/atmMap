@@ -265,16 +265,16 @@
          android:layout_marginRight="5dp"
          android:src="@drawable/x_close" />
 
-     
-     <ImageButton
+         <Button
+         android:color="#FFFFFF"
          android:id="@+id/directionsButton"
-         android:layout_width="40dp"
-         android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+         android:layout_width="fill_parent"
+         android:layout_height="46dp"
          android:padding="10dp"
-         android:background="@null"
-         android:text="Directions"
-         android:layout_marginTop="50dp"
-         android:src="@drawable/directions"/>
+         android:text="Launch Directions"
+         android:background="@color/backRedTransparent"  
+         android:layout_marginTop="80dp"/>
      
     </RelativeLayout>  
        
@@ -322,4 +322,44 @@
        
    </RelativeLayout> 
         
+<RelativeLayout
+        android:id="@+id/messages"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/backRedMidTransparent"
+        android:layout_alignParentTop="true"
+        android:gravity="center" >
+  <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/messageText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logoImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="Loading..."
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:gravity="center"/>
+    
+    
+      <Button
+         android:color="#FFFFFF"
+         android:id="@+id/retryDatabase"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+         android:layout_width="fill_parent"
+         android:layout_height="46dp"
+         android:padding="10dp"
+         android:text="Try Again?"
+         android:background="@color/backRedTransparent"  
+         android:layout_marginTop="80dp"/>
+      
+        </RelativeLayout>
 </RelativeLayout>

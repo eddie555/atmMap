@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
 
     <color name="backRed">#4742CA</color>
+     <color name="backRedMidTransparent">#AA4742CA</color>
      <color name="backRedTransparent">#CC4742CA</color>
     <color name="white">#FFFFFF</color>
      <color name="whiteTransparent">#CCFFFFFF</color>
