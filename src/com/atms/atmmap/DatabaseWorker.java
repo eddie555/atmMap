@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -26,11 +27,11 @@ import com.google.android.gms.maps.model.LatLng;
 public class DatabaseWorker extends SQLiteOpenHelper {
 	Context mContext;
 	SQLiteDatabase db;
-
 	public DatabaseWorker(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
+		
 		this.mContext = context;
+		
 		if (!checkDataBase()) {
 		   updateDB();
 
@@ -75,7 +76,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 					SQLiteDatabase.OPEN_READONLY);
 			db.close();
 		} catch (SQLiteException e) {
-			System.out.println("NO DATABASE");
+			System.out.println("NO DATABAcopyAssetsFiles()SE");
 		}
 		return db != null ? true : false;
 	}
@@ -195,7 +196,7 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		//db.close();
 		db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
 				SQLiteDatabase.OPEN_READONLY);
-		String limit = "45";
+		String limit = "65";
 		String selectQuery = "SELECT address,lng,lat,owner FROM atms_accurate ORDER BY ABS("
 				+ ll.latitude
 				+ "3 - lat) + ABS("
@@ -226,9 +227,9 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		//db.close();
 		db = SQLiteDatabase.openDatabase(DB_FULL_PATH, null,
 				SQLiteDatabase.OPEN_READONLY);
-		String limit = "30";
+		String limit = "120";
 		String selectQuery = "SELECT name,lng,lat,city FROM towns_accurate where name like '"
-				+ charSequence + "%' ORDER BY city DESC";
+				+ charSequence + "%' ORDER BY city DESC LIMIT "+limit;
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list
@@ -284,4 +285,5 @@ public class DatabaseWorker extends SQLiteOpenHelper {
 		}
 		os.flush();
 	}
+	
 }

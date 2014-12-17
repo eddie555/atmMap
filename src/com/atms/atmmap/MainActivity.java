@@ -1,14 +1,10 @@
 package com.atms.atmmap;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Random;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.atms.atmmap.MyLocation.LocationResult;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -45,15 +42,19 @@ import com.google.analytics.tracking.android.Tracker;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -71,17 +72,21 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 	public final static String EXTRA_MESSAGE = "com.atms.atmmap.MESSAGE";
 	public LinearLayout adBlock;
 
+	boolean ignoreMapMovement = false;
 	public Menu menu;
 	public LatLng ZoomArea = new LatLng(53.558, 9.927);
 	public LatLng MyLoc = new LatLng(53.558, 9.927);
 
 	public String nearestTown;
 	public String locationDisplayText;
-
+public LatLng compareLatLng;
+	ArrayList<LatLng> decodedPoints;
+	public Location location;
 	private GoogleMap map;
 	ArrayList<Marker> markers = new ArrayList<Marker>();
 	ArrayList<MarkerDetails> marker_gps = new ArrayList<MarkerDetails>();
 
+	
 	public void setMapType(String tp) {
 		if (tp.equals("hybrid"))
 			map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -181,7 +186,16 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 	}
 
 	Tracker v3EasyTracker;
-
+	
+	public void setDecodedPoints(ArrayList<ATM> atms){
+		System.out.println("DEcoding");
+		for(int i=0;i<atms.size();i++){
+			decodedPoints.add(new LatLng(atms.get(i).lat, atms.get(i).lng));
+		}
+	
+	}
+	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -190,7 +204,7 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		
+		decodedPoints = new ArrayList<LatLng>();
 		v3EasyTracker = EasyTracker.getInstance(this);
 
 		try {
@@ -202,6 +216,7 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 		}
 
+		
 		adView = new AdView(this);
 
 		String areaLoc = "";
@@ -222,9 +237,18 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		final Location location;
 		location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
+		
+		LocationResult locationResult = new LocationResult(){
+		    @Override
+		    public void gotLocation(Location loc){
+		        System.out.println("GOT loc");
+		        MainActivity.this.location=loc;
+		    }
+		};
+		MyLocation myLocation = new MyLocation();
+		myLocation.getLocation(this, locationResult);
 		// v3
 
 		if (areaLoc.length() < 1) {
@@ -375,7 +399,22 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 			}
 		});
+		
+		compareLatLng = map.getCameraPosition().target; 
+		map.setOnCameraChangeListener(new OnCameraChangeListener() {
 
+		    @Override
+		    public void onCameraChange(CameraPosition arg0) {
+		    	if(!ignoreMapMovement){
+		    		LatLng cop2 = map.getCameraPosition().target;
+		    		if(Math.abs(cop2.latitude - compareLatLng.latitude) > 1 || Math.abs(cop2.longitude - compareLatLng.longitude) > 1  )
+		    		loadMarkers();
+		    	}
+		    	MainActivity.this.compareLatLng = map.getCameraPosition().target; 
+		    	ignoreMapMovement=false;
+		    }
+		});
+		
 		menu_button = (ImageButton) findViewById(R.id.menu);
 
 		menu_button.setOnClickListener(new View.OnClickListener() {
@@ -544,13 +583,27 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 		displayMapOnScreen();
 	}
-
 	public void goToMyLocation() {
-
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyLoc, 5));
+		
 		map.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
+		
+		map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+	        @Override
+	        public void onMapLoaded() {
+	        	
+	        	com.google.android.gms.maps.model.LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
+	    		
+	    		for (LatLng point : decodedPoints) {
+	    		    boundsBuilder.include(point);
+	    		}
+	    		LatLngBounds bounds = boundsBuilder.build();
+	    		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 10);
+	    		map.moveCamera(cameraUpdate);	
+	        }
+	});
+		
 	}
-
+	
 	public String getNearestTown() {
 		String townName = "";
 		return dw.getNearestTown(MyLoc);
@@ -590,14 +643,16 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 	}
 
 	public void loadMarkers() {
-
+		map.clear();
 		map.addMarker(new MarkerOptions()
 				.position(MyLoc)
 				.title(locationDisplayText)
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.gps_icon)));
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.gps_icon))
+				.draggable(true));
 
-		ArrayList<ATM> closestAtms = dw.getClosestAtms(MyLoc);
-
+		ArrayList<ATM> closestAtms = dw.getClosestAtms(map.getCameraPosition().target);
+		setDecodedPoints(closestAtms);
+		
 		int c = closestAtms.size();
 		for (int i = 0; i < c; i++) {
 
@@ -656,6 +711,7 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 			@Override
 			public boolean onMarkerClick(Marker arg0) {
+				ignoreMapMovement=true;
 				arg0.hideInfoWindow();
 				if (markers != null) {
 					for (int i = 0; i < markers.size(); i++) {
@@ -684,8 +740,10 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 			@Override
 			public void onMarkerDragEnd(Marker marker) {
 				if (markers != null) {
-					for (int i = 0; i < markers.size(); i++) {
-						if (markers.get(i) == marker) {
+			//	MyLoc = map.getCenter();
+					/*
+					 for (int i = 0; i < markers.size(); i++) {
+					 	if (markers.get(i) == marker) {
 
 							try {
 								URL posUrl = new URL(
@@ -708,6 +766,7 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 						}
 					}
+					*/
 
 				}
 			}
@@ -764,7 +823,8 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 				return false;
 			}
 		});
-
+		
+		
 		image.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -796,7 +856,7 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 
 	public void displayMapOnScreen() {
 
-		loadMarkers();
+		//loadMarkers();
 
 		// Move the camera instantly to hamburg with a zoom of 15.
 		goToMyLocation();
