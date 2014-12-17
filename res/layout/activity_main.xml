@@ -262,8 +262,20 @@
          android:layout_height="50dp"
          android:background="@null"
          android:layout_marginTop="5dp"
-         android:layout_marginRight="5dp" />
+         android:layout_marginRight="5dp"
+         android:src="@drawable/x_close" />
 
+     
+     <ImageButton
+         android:id="@+id/directionsButton"
+         android:layout_width="40dp"
+         android:layout_height="40dp"
+         android:padding="10dp"
+         android:background="@null"
+         android:text="Directions"
+         android:layout_marginTop="50dp"
+         android:src="@drawable/directions"/>
+     
     </RelativeLayout>  
        
    </RelativeLayout>  

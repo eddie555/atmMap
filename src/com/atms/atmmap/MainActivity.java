@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity implements OnMarkerDragListener {
 	public Menu menu;
 	public LatLng ZoomArea = new LatLng(53.558, 9.927);
 	public LatLng MyLoc = new LatLng(53.558, 9.927);
-
+	public LatLng myStaticSpot = new LatLng(53.558, 9.927);
 	public String nearestTown;
 	public String locationDisplayText;
 public LatLng compareLatLng;
@@ -245,6 +245,7 @@ public LatLng compareLatLng;
 		    public void gotLocation(Location loc){
 		        System.out.println("GOT loc");
 		        MainActivity.this.location=loc;
+		        
 		    }
 		};
 		MyLocation myLocation = new MyLocation();
@@ -292,6 +293,12 @@ public LatLng compareLatLng;
 			v3EasyTracker.set(Fields.SCREEN_NAME, "Home Screen SEARCH:: "
 					+ nearestTown);
 
+		}
+		
+		if(location!=null){
+
+	        MainActivity.this.myStaticSpot=new LatLng(location.getLatitude(),
+					location.getLongitude());
 		}
 
 		// Send a screenview.
@@ -654,8 +661,8 @@ public LatLng compareLatLng;
 				.title(locationDisplayText)
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.gps_icon))
 				.draggable(true));
-System.out.println("DIFFERENCE: IN HERE");
 
+	
 		ArrayList<ATM> closestAtms = dw.getClosestAtms(map.getCameraPosition().target);
 		setDecodedPoints(closestAtms);
 		
@@ -800,6 +807,9 @@ System.out.println("DIFFERENCE: IN HERE");
 		ImageButton xbut = (ImageButton) findViewById(R.id.x_close_id);
 		xbut.setImageResource(R.drawable.x_close);
 
+		ImageButton directionsBut = (ImageButton) findViewById(R.id.directionsButton);
+		xbut.setImageResource(R.drawable.directions);
+		//directionsBut.setHeight(40);
 		/*
 		 * Button saveBut = (Button)findViewById(R.id.saveButton);
 		 * saveBut.setHeight(100);
@@ -821,11 +831,23 @@ System.out.println("DIFFERENCE: IN HERE");
 		popup.setVisibility(View.VISIBLE);
 		location_popup.setVisibility(View.GONE);
 
+		
 		xbut.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				popup.setVisibility(View.INVISIBLE);
+				return false;
+			}
+		});
+		
+		directionsBut.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
+				Uri.parse("http://maps.google.com/maps?saddr="+MyLoc.latitude+","+MyLoc.longitude+"(My+Location)&daddr="+currentGPS.latitude+","+currentGPS.longitude+"(ATM)"));
+				startActivity(intent);
 				return false;
 			}
 		});
