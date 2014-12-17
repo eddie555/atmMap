@@ -203,7 +203,7 @@ public LatLng compareLatLng;
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-
+		compareLatLng = new LatLng(0,0);; 
 		decodedPoints = new ArrayList<LatLng>();
 		v3EasyTracker = EasyTracker.getInstance(this);
 
@@ -400,17 +400,18 @@ public LatLng compareLatLng;
 			}
 		});
 		
-		compareLatLng = map.getCameraPosition().target; 
+		
 		map.setOnCameraChangeListener(new OnCameraChangeListener() {
 
 		    @Override
 		    public void onCameraChange(CameraPosition arg0) {
 		    	if(!ignoreMapMovement){
 		    		LatLng cop2 = map.getCameraPosition().target;
-		    		if(Math.abs(cop2.latitude - compareLatLng.latitude) > 1 || Math.abs(cop2.longitude - compareLatLng.longitude) > 1  )
-		    		loadMarkers();
+		    		System.out.println("DIFFERENCE: "+Math.abs(cop2.latitude - compareLatLng.latitude));
+		    		if(Math.abs(cop2.latitude - compareLatLng.latitude) > .01 || Math.abs(cop2.longitude - compareLatLng.longitude) > .01  )
+		    	    {MainActivity.this.compareLatLng = map.getCameraPosition().target; 
+		    		loadMarkers();}
 		    	}
-		    	MainActivity.this.compareLatLng = map.getCameraPosition().target; 
 		    	ignoreMapMovement=false;
 		    }
 		});
@@ -584,23 +585,27 @@ public LatLng compareLatLng;
 		displayMapOnScreen();
 	}
 	public void goToMyLocation() {
+		 map.moveCamera(CameraUpdateFactory.newLatLng(MyLoc));
+		map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
 		
-		map.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
-		
+		/*
 		map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
 	        @Override
 	        public void onMapLoaded() {
 	        	
 	        	com.google.android.gms.maps.model.LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
 	    		
+	        	if(decodedPoints.size()>1)
+	        	{
 	    		for (LatLng point : decodedPoints) {
 	    		    boundsBuilder.include(point);
 	    		}
 	    		LatLngBounds bounds = boundsBuilder.build();
 	    		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 10);
 	    		map.moveCamera(cameraUpdate);	
+	        	}
 	        }
-	});
+	});*/
 		
 	}
 	
@@ -649,6 +654,7 @@ public LatLng compareLatLng;
 				.title(locationDisplayText)
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.gps_icon))
 				.draggable(true));
+System.out.println("DIFFERENCE: IN HERE");
 
 		ArrayList<ATM> closestAtms = dw.getClosestAtms(map.getCameraPosition().target);
 		setDecodedPoints(closestAtms);
